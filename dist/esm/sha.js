@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.sha = void 0;
-const fs = require("fs-extra");
-const crypto = require("crypto");
-const debug_1 = require("./debug");
-exports.sha = async (filePath) => {
-    debug_1.d('hashing', filePath);
+import * as fs from 'fs-extra';
+import * as crypto from 'crypto';
+import { d } from './debug';
+export const sha = async (filePath) => {
+    d('hashing', filePath);
     const hash = crypto.createHash('sha256');
     hash.setEncoding('hex');
     const fileStream = fs.createReadStream(filePath);

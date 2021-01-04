@@ -9,7 +9,7 @@ var AsarMode;
     AsarMode[AsarMode["NO_ASAR"] = 0] = "NO_ASAR";
     AsarMode[AsarMode["HAS_ASAR"] = 1] = "HAS_ASAR";
 })(AsarMode = exports.AsarMode || (exports.AsarMode = {}));
-const detectAsarMode = async (appPath) => {
+exports.detectAsarMode = async (appPath) => {
     debug_1.d('checking asar mode of', appPath);
     const asarPath = path.resolve(appPath, 'Contents', 'Resources', 'app.asar');
     if (!(await fs.pathExists(asarPath))) {
@@ -19,5 +19,4 @@ const detectAsarMode = async (appPath) => {
     debug_1.d('determined has asar');
     return AsarMode.HAS_ASAR;
 };
-exports.detectAsarMode = detectAsarMode;
 //# sourceMappingURL=asar-utils.js.map

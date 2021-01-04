@@ -1,22 +1,19 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllAppFiles = exports.AppFileType = void 0;
-const cross_spawn_promise_1 = require("@malept/cross-spawn-promise");
-const fs = require("fs-extra");
-const path = require("path");
+import { spawn } from '@malept/cross-spawn-promise';
+import * as fs from 'fs-extra';
+import * as path from 'path';
 const MACHO_PREFIX = 'Mach-O ';
-var AppFileType;
+export var AppFileType;
 (function (AppFileType) {
     AppFileType[AppFileType["MACHO"] = 0] = "MACHO";
     AppFileType[AppFileType["PLAIN"] = 1] = "PLAIN";
     AppFileType[AppFileType["SNAPSHOT"] = 2] = "SNAPSHOT";
     AppFileType[AppFileType["APP_CODE"] = 3] = "APP_CODE";
-})(AppFileType = exports.AppFileType || (exports.AppFileType = {}));
+})(AppFileType || (AppFileType = {}));
 /**
  *
  * @param appPath Path to the application
  */
-exports.getAllAppFiles = async (appPath) => {
+export const getAllAppFiles = async (appPath) => {
     const files = [];
     const visited = new Set();
     const traverse = async (p) => {
@@ -29,7 +26,7 @@ exports.getAllAppFiles = async (appPath) => {
             return;
         if (info.isFile()) {
             let fileType = AppFileType.PLAIN;
-            const fileOutput = await cross_spawn_promise_1.spawn('file', ['--brief', '--no-pad', p]);
+            const fileOutput = await spawn('file', ['--brief', '--no-pad', p]);
             if (p.includes('app.asar')) {
                 fileType = AppFileType.APP_CODE;
             }
