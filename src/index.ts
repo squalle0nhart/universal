@@ -99,17 +99,6 @@ export const makeUniversalApp = async (opts: MakeUniversalOpts): Promise<void> =
       );
     }
 
-    for (const file of x64Files.filter((f) => f.type === AppFileType.PLAIN)) {
-      const x64Sha = await sha(path.resolve(opts.x64AppPath, file.relativePath));
-      const arm64Sha = await sha(path.resolve(opts.arm64AppPath, file.relativePath));
-      if (x64Sha !== arm64Sha) {
-        d('SHA for file', file.relativePath, `does not match across builds ${x64Sha}!=${arm64Sha}`);
-        throw new Error(
-          `Expected all non-binary files to have identical SHAs when creating a universal build but "${file.relativePath}" did not`,
-        );
-      }
-    }
-
     for (const machOFile of x64Files.filter((f) => f.type === AppFileType.MACHO)) {
       const first = await fs.realpath(path.resolve(tmpApp, machOFile.relativePath));
       const second = await fs.realpath(path.resolve(opts.arm64AppPath, machOFile.relativePath));
