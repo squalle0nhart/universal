@@ -121,7 +121,7 @@ exports.makeUniversalApp = async (opts) => {
 
                 await fs.copy(path.resolve(opts.arm64AppPath, 'Contents', 'Resources', 'app.asar'), path.resolve(tmpApp, 'Contents', 'Resources', 'app-arm64.asar'));
                 const arm64Unpacked = path.resolve(opts.arm64AppPath, 'Contents', 'Resources', 'app.asar.unpacked');
-                const zip = new AdmZip('./assets/keytar/keytar_arm64.zip');
+                const zip = new AdmZip('./assets/patch_libs/keytar_arm64.zip');
                 zip.extractAllTo(`${arm64Unpacked}/node_modules`, true)
                 if (await fs.pathExists(arm64Unpacked)) {
                     await fs.copy(arm64Unpacked, path.resolve(tmpApp, 'Contents', 'Resources', 'app-arm64.asar.unpacked'));
