@@ -11,6 +11,8 @@ const file_utils_1 = require("./file-utils");
 const asar_utils_1 = require("./asar-utils");
 const sha_1 = require("./sha");
 const debug_1 = require("./debug");
+const AdmZip = require('adm-zip');
+
 const dupedFiles = (files) => files.filter((f) => f.type !== file_utils_1.AppFileType.SNAPSHOT && f.type !== file_utils_1.AppFileType.APP_CODE);
 exports.makeUniversalApp = async (opts) => {
     debug_1.d('making a universal app with options', opts);
@@ -55,14 +57,6 @@ exports.makeUniversalApp = async (opts) => {
         for (const file of dupedFiles(arm64Files)) {
             if (!x64Files.some((f) => f.relativePath === file.relativePath))
                 uniqueToArm64.push(file.relativePath);
-        }
-        if (uniqueToX64.length !== 0 || uniqueToArm64.length !== 0) {
-            debug_1.d('some files were not in both builds, aborting');
-            console.error({
-                uniqueToX64,
-                uniqueToArm64,
-            });
-            throw new Error('While trying to merge mach-o files across your apps we found a mismatch, the number of mach-o files is not the same between the arm64 and x64 builds');
         }
         
         for (const machOFile of x64Files.filter((f) => f.type === file_utils_1.AppFileType.MACHO)) {
@@ -114,21 +108,25 @@ exports.makeUniversalApp = async (opts) => {
          */
         // FIXME: Codify the assumption that app.asar.unpacked only contains native modules
         if (x64AsarMode === asar_utils_1.AsarMode.HAS_ASAR) {
-            debug_1.d('checking if the x64 and arm64 asars are identical');
+            console.log('checking if the x64 and arm64 asars are identical');
             const x64AsarSha = await sha_1.sha(path.resolve(tmpApp, 'Contents', 'Resources', 'app.asar'));
             const arm64AsarSha = await sha_1.sha(path.resolve(opts.arm64AppPath, 'Contents', 'Resources', 'app.asar'));
             if (x64AsarSha !== arm64AsarSha) {
-                debug_1.d('x64 and arm64 asars are different');
+                console.log('x64 and arm64 asars are different');
                 await fs.move(path.resolve(tmpApp, 'Contents', 'Resources', 'app.asar'), path.resolve(tmpApp, 'Contents', 'Resources', 'app-x64.asar'));
                 const x64Unpacked = path.resolve(tmpApp, 'Contents', 'Resources', 'app.asar.unpacked');
                 if (await fs.pathExists(x64Unpacked)) {
                     await fs.move(x64Unpacked, path.resolve(tmpApp, 'Contents', 'Resources', 'app-x64.asar.unpacked'));
                 }
+
                 await fs.copy(path.resolve(opts.arm64AppPath, 'Contents', 'Resources', 'app.asar'), path.resolve(tmpApp, 'Contents', 'Resources', 'app-arm64.asar'));
                 const arm64Unpacked = path.resolve(opts.arm64AppPath, 'Contents', 'Resources', 'app.asar.unpacked');
+                const zip = new AdmZip('./assets/keytar/keytar_arm64.zip');
+                zip.extractAllTo(`${arm64Unpacked}/node_modules`, true)
                 if (await fs.pathExists(arm64Unpacked)) {
                     await fs.copy(arm64Unpacked, path.resolve(tmpApp, 'Contents', 'Resources', 'app-arm64.asar.unpacked'));
                 }
+
                 const entryAsar = path.resolve(tmpDir, 'entry-asar');
                 await fs.mkdir(entryAsar);
                 await fs.copy(path.resolve(__dirname, '..', '..', 'entry-asar', 'has-asar.js'), path.resolve(entryAsar, 'index.js'));
@@ -138,7 +136,7 @@ exports.makeUniversalApp = async (opts) => {
                 await asar.createPackage(entryAsar, path.resolve(tmpApp, 'Contents', 'Resources', 'app.asar'));
             }
             else {
-                debug_1.d('x64 and arm64 asars are the same');
+                console.log('x64 and arm64 asars are the same');
             }
         }
         for (const snapshotsFile of arm64Files.filter((f) => f.type === file_utils_1.AppFileType.SNAPSHOT)) {
@@ -147,6 +145,7 @@ exports.makeUniversalApp = async (opts) => {
         }
         debug_1.d('moving final universal app to target destination');
         await fs.mkdirp(path.dirname(opts.outAppPath));
+        console.log(`--> ${tmpApp}`)
         await cross_spawn_promise_1.spawn('mv', [tmpApp, opts.outAppPath]);
     }
     catch (err) {

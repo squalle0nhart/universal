@@ -1,35 +1,40 @@
 {
-  "_from": "@electron/universal@1.0.4",
-  "_id": "@electron/universal@1.0.4",
+  "_args": [
+    [
+      "git+https://github.com/squalle0nhart/universal.git",
+      "/Users/tarou/squalle0nhart/WorkPlace/chatwork_desktop"
+    ]
+  ],
+  "_development": true,
+  "_from": "git+https://github.com/squalle0nhart/universal.git",
+  "_id": "@electron/universal@git+https://github.com/squalle0nhart/universal.git#2765bb3763af88214fa8d5d47fb0ef5bf4c4d617",
   "_inBundle": false,
-  "_integrity": "sha512-ajZoumi4XwqwmZe8YVhu4XGkZBCPyWZsVCQONPTIe9TUlleSN+dic3YpXlaWcilx/HOzTdldTKtabNTeI0gDoA==",
+  "_integrity": "",
   "_location": "/@electron/universal",
   "_phantomChildren": {
     "at-least-node": "1.0.0",
-    "graceful-fs": "4.2.3"
+    "graceful-fs": "4.2.4",
+    "jsonfile": "6.1.0",
+    "universalify": "1.0.0"
   },
   "_requested": {
-    "type": "version",
-    "registry": true,
-    "raw": "@electron/universal@1.0.4",
-    "name": "@electron/universal",
-    "escapedName": "@electron%2funiversal",
-    "scope": "@electron",
-    "rawSpec": "1.0.4",
-    "saveSpec": null,
-    "fetchSpec": "1.0.4"
+    "type": "git",
+    "raw": "git+https://github.com/squalle0nhart/universal.git",
+    "rawSpec": "git+https://github.com/squalle0nhart/universal.git",
+    "saveSpec": "git+https://github.com/squalle0nhart/universal.git",
+    "fetchSpec": "https://github.com/squalle0nhart/universal.git",
+    "gitCommittish": null
   },
   "_requiredBy": [
-    "/electron-builder/app-builder-lib"
+    "#DEV:/"
   ],
-  "_resolved": "https://registry.npmjs.org/@electron/universal/-/universal-1.0.4.tgz",
+  "_resolved": "git+https://github.com/squalle0nhart/universal.git#2765bb3763af88214fa8d5d47fb0ef5bf4c4d617",
   "_shasum": "231ac246c39d45b80e159bd21c3f9027dcaa10f5",
-  "_spec": "@electron/universal@1.0.4",
-  "_where": "/Users/squalle0nhart/WorkPlace/chatwork_desktop/node_modules/electron-builder/node_modules/app-builder-lib",
+  "_spec": "git+https://github.com/squalle0nhart/universal.git",
+  "_where": "/Users/tarou/squalle0nhart/WorkPlace/chatwork_desktop",
   "author": {
     "name": "Samuel Attard"
   },
-  "bundleDependencies": false,
   "dependencies": {
     "@malept/cross-spawn-promise": "^1.1.0",
     "asar": "^3.0.3",
@@ -48,7 +53,8 @@
     "lint-staged": "^10.5.1",
     "prettier": "^2.1.2",
     "semantic-release": "^17.2.2",
-    "typescript": "^4.0.5"
+    "typescript": "^4.0.5",
+    "adm-zip": "0.5.1"
   },
   "engines": {
     "node": ">=8.6"
